@@ -1,0 +1,24 @@
+# permissions for end users to edit tigs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: tig-editor-role
+rules:
+- apiGroups:
+  - game.example.com
+  resources:
+  - tigs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - game.example.com
+  resources:
+  - tigs/status
+  verbs:
+  - get
