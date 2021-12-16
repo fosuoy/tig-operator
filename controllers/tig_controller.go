@@ -37,6 +37,7 @@ type TigReconciler struct {
 //+kubebuilder:rbac:groups=game.example.com,resources=tigs,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=game.example.com,resources=tigs/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=game.example.com,resources=tigs/finalizers,verbs=update
+//+kubebuilder:rbac:groups="",resources=serviceaccounts,verbs=get;watch;list
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -54,7 +55,7 @@ func (r *TigReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 
 	err := r.Get(ctx, req.NamespacedName, serviceAccount)
 	if err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, nil
 	}
 
 	serviceAccountName := serviceAccount.ObjectMeta.Name
@@ -73,7 +74,7 @@ func (r *TigReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		client.ObjectKey{Namespace: serviceAccount.Namespace, Name: "tig"},
 		tig)
 	if err != nil {
-		log.Error(err, "Not found")
+		log.Info(serviceAccount.Namespace + " is it - tigging...")
 		err = r.Create(ctx, tig)
 		if err != nil {
 			log.Error(err, "Failed to create tig")
